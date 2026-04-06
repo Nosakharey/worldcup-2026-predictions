@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: raw_data
+    database: worldcup-2026-predictions
+    schema: raw_data
+    tables: 
+      - name: results
+
+      - name: goalscorers
+      - name: shootouts
+      - name: players_24
+      - name: teams_24
+      - name: fifa_world_cup_summary
+      - name: world_cup_2026_fixtures
+      - name: world_cup_2026_groups
+      - name: current_player_stats
+        description: "Current season player stats from API-Football"

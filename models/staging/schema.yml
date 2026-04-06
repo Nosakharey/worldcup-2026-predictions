@@ -1,0 +1,201 @@
+version: 2
+
+models:
+  - name: stg_results
+    description: "Cleaned international football match results"
+    columns:
+      - name: match_date
+        description: "Date the match was played"
+        tests:
+          - not_null
+      - name: home_team
+        description: "Home team name (lowercase)"
+        tests:
+          - not_null
+      - name: away_team
+        description: "Away team name (lowercase)"
+        tests:
+          - not_null
+      - name: home_score
+        description: "Goals scored by home team"
+        tests:
+          - not_null
+      - name: away_score
+        description: "Goals scored by away team"
+        tests:
+          - not_null
+
+  - name: stg_goalscorers
+    description: "Cleaned international football goalscorers data"
+    columns:
+      - name: match_date
+        description: "Date the match was played"
+        tests:
+          - not_null
+      - name: scorer_name
+        description: "Name of the player who scored"
+        tests:
+          - not_null
+      - name: scoring_team
+        description: "Team that scored (lowercase)"
+        tests:
+          - not_null
+
+  - name: stg_shootouts
+    description: "Cleaned penalty shootout results"
+    columns:
+      - name: match_date
+        description: "Date of the shootout"
+        tests:
+          - not_null
+      - name: winner
+        description: "Team that won the shootout"
+        tests:
+          - not_null
+
+  - name: stg_players_24
+    description: "Cleaned EA Sports FC 24 player ratings"
+    columns:
+      - name: player_id
+        description: "Unique player identifier"
+        tests:
+          - not_null
+      - name: nationality_name
+        description: "Player nationality"
+        tests:
+          - not_null
+
+  - name: stg_teams_24
+    description: "Cleaned EA Sports FC 24 team ratings"
+    columns:
+      - name: team_id
+        description: "Unique team identifier"
+        tests:
+          - not_null
+      - name: team_name
+        description: "Team name"
+        tests:
+          - not_null
+
+  - name: stg_fifa_summary
+    description: "FIFA World Cup tournament summary 1930-2022"
+    columns:
+      - name: tournament_year
+        description: "Year of the World Cup"
+        tests:
+          - not_null
+          - unique
+      - name: champion
+        description: "Country that won the World Cup"
+        tests:
+          - not_null
+          
+  - name: dim_players
+    description: "Master player dimension combining API current season 
+                  stats, FIFA 24 ratings and historical international 
+                  goals. One row per player. Used for all player 
+                  related predictions."
+    columns:
+      - name: player_sk
+        description: "Surrogate key - unique identifier for each player"
+        tests:
+          - unique
+          - not_null
+      - name: api_player_id
+        description: "Player ID from API-Football"
+        tests:
+          - not_null
+      - name: player_name
+        description: "Standardized lowercase player name"
+        tests:
+          - not_null
+      - name: nationality
+        description: "Player nationality (standardized lowercase)"
+        tests:
+          - not_null
+      - name: current_season_goals
+        description: "Goals scored in 2024/25 season"
+      - name: historical_goals
+        description: "Total international goals scored"
+      - name: fifa_overall
+        description: "FIFA 24 overall rating"
+      - name: golden_boot_score
+        description: "Composite score for Golden Boot prediction"
+      - name: best_assist_score
+        description: "Composite score for Best Assist prediction"
+      - name: golden_ball_score
+        description: "Composite score for Golden Ball prediction"
+
+  - name: fct_matches
+    description: "One row per international match. Source of truth for
+                  historical match results used in win probability modeling."
+    columns:
+      - name: match_sk
+        description: "Surrogate key - unique identifier for each match"
+        tests:
+          - unique
+          - not_null
+      - name: match_date
+        description: "Date the match was played"
+        tests:
+          - not_null
+      - name: home_team
+        description: "Home team name (standardized lowercase)"
+        tests:
+          - not_null
+      - name: away_team
+        description: "Away team name (standardized lowercase)"
+        tests:
+          - not_null
+      - name: match_result
+        description: "Result of the match from home team perspective"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['home_win', 'away_win', 'draw']
+
+  - name: fct_goals
+    description: "One row per international goal scored. Links to
+                  fct_matches via match_sk and dim_players via player_sk."
+    columns:
+      - name: goal_sk
+        description: "Surrogate key - unique identifier for each goal"
+        tests:
+          - unique
+          - not_null
+      - name: match_sk
+        description: "Foreign key to fct_matches"
+      - name: player_sk
+        description: "Foreign key to dim_players. NULL if player not in dim_players."
+      - name: scorer_name
+        description: "Name of the goal scorer. NULL for unknown historical scorers."
+      - name: scoring_team
+        description: "Team that scored the goal (standardized lowercase)"
+        tests:
+          - not_null
+      - name: match_date
+        description: "Date the match was played"
+        tests:
+          - not_null
+      - name: is_own_goal
+        description: "True if the goal was an own goal"
+        tests:
+          - not_null
+      - name: is_penalty
+        description: "True if the goal was scored from the penalty spot"
+        tests:
+          - not_null
+      - name: is_open_play
+        description: "True if the goal was scored from open play"
+        tests:
+          - not_null
+      - name: is_world_cup
+        description: "True if the goal was scored in a World Cup match"
+        tests:
+          - not_null
+      - name: goal_importance_weight
+        description: "Weight assigned to goal based on tournament importance.
+                      World Cup=3.0, Major tournament=2.0, Friendly=0.5, Other=1.0"
+        tests:
+          - not_null
