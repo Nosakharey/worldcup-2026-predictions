@@ -1,0 +1,93 @@
+version: 2
+
+models:
+  - name: mart_match_results
+    description: "Historical match results enriched with shootout data, 
+                  partitioned by year and clustered by team. 
+                  Used for tournament winner and match outcome predictions."
+    columns:
+      - name: match_date
+        description: "Date the match was played"
+      - name: home_team
+        description: "Home team (standardized lowercase)"
+      - name: away_team
+        description: "Away team (standardized lowercase)"
+      - name: match_result
+        description: "home_win, away_win or draw"
+      - name: goal_difference
+        description: "home_score minus away_score"
+      - name: had_shootout
+        description: "Whether match went to penalty shootout"
+
+  - name: mart_top_scorers
+    description: "Top international goalscorers from 2026 qualified nations.
+                  Used for Golden Boot prediction."
+    columns:
+      - name: scorer_name
+        description: "Player name (lowercase)"
+      - name: nationality
+        description: "Country (standardized lowercase)"
+      - name: total_goals
+        description: "Total international goals scored"
+      - name: penalty_goals
+        description: "Goals scored from penalty spot"
+      - name: open_play_goals
+        description: "Goals scored from open play"
+      - name: wc_2026_group
+        description: "World Cup 2026 group (A-L)"
+
+  - name: mart_team_strength
+    description: "Team strength metrics combining historical results 
+                  with FIFA ratings. Used for tournament winner 
+                  and underdog predictions."
+    columns:
+      - name: team_name
+        description: "Team name (standardized lowercase)"
+      - name: win_rate_pct
+        description: "Historical win percentage"
+      - name: avg_goals_scored
+        description: "Average goals scored per match"
+      - name: avg_goals_conceded
+        description: "Average goals conceded per match"
+      - name: fifa_overall_rating
+        description: "Current FIFA team overall rating"
+      - name: wc_2026_group
+        description: "World Cup 2026 group (A-L)"
+
+  - name: mart_player_rankings
+    description: "Player rankings combining FIFA ratings with 
+                  international goals. Used for Golden Ball prediction."
+    columns:
+      - name: short_name
+        description: "Player short name"
+      - name: nationality
+        description: "Player nationality (standardized)"
+      - name: overall_rating
+        description: "FIFA 24 overall rating"
+      - name: international_goals
+        description: "Total international goals scored"
+      - name: wc_2026_group
+        description: "World Cup 2026 group (A-L)"
+  - name: dim_teams
+    description: "Master team dimension combining WC 2026 groups, 
+                  historical results and FIFA ratings. 
+                  One row per qualified team."
+    columns:
+      - name: team_sk
+        description: "Surrogate key - unique identifier for each team"
+        tests:
+          - unique
+          - not_null
+      - name: team_name
+        description: "Standardized lowercase team name"
+        tests:
+          - unique
+          - not_null
+      - name: wc_2026_group
+        description: "World Cup 2026 group (A-L)"
+        tests:
+          - not_null
+      - name: win_rate_pct
+        description: "Historical win percentage"
+      - name: fifa_overall
+        description: "FIFA 24 overall team rating"
