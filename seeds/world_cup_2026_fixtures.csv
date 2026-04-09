@@ -1,0 +1,73 @@
+match_id,stage,group,home_team,away_team,match_date,venue,city
+1,Group Stage,A,mexico,south africa,2026-06-11,Mexico City Stadium,Mexico City
+2,Group Stage,A,korea republic,czechia,2026-06-12,Guadalajara Stadium,Guadalajara
+3,Group Stage,B,canada,bosnia-herzegovina,2026-06-12,Toronto Stadium,Toronto
+4,Group Stage,D,usa,paraguay,2026-06-13,Los Angeles Stadium,Los Angeles
+5,Group Stage,B,qatar,switzerland,2026-06-13,San Francisco Bay Area Stadium,San Francisco
+6,Group Stage,C,brazil,morocco,2026-06-13,New York/New Jersey Stadium,New York
+7,Group Stage,C,haiti,scotland,2026-06-14,Boston Stadium,Boston
+8,Group Stage,D,australia,turkiye,2026-06-14,BC Place Vancouver,Vancouver
+9,Group Stage,E,germany,curacao,2026-06-14,Houston Stadium,Houston
+10,Group Stage,F,netherlands,japan,2026-06-14,Dallas Stadium,Dallas
+11,Group Stage,E,cote d'ivoire,ecuador,2026-06-15,Philadelphia Stadium,Philadelphia
+12,Group Stage,F,sweden,tunisia,2026-06-15,Monterrey Stadium,Monterrey
+13,Group Stage,H,spain,cabo verde,2026-06-15,Atlanta Stadium,Atlanta
+14,Group Stage,G,belgium,egypt,2026-06-15,Seattle Stadium,Seattle
+15,Group Stage,H,saudi arabia,uruguay,2026-06-15,Miami Stadium,Miami
+16,Group Stage,G,ir iran,new zealand,2026-06-16,Los Angeles Stadium,Los Angeles
+17,Group Stage,I,france,senegal,2026-06-16,New York/New Jersey Stadium,New York
+18,Group Stage,I,iraq,norway,2026-06-16,Boston Stadium,Boston
+19,Group Stage,J,argentina,algeria,2026-06-17,Kansas City Stadium,Kansas City
+20,Group Stage,J,austria,jordan,2026-06-17,San Francisco Bay Area Stadium,San Francisco
+21,Group Stage,K,portugal,congo dr,2026-06-17,Houston Stadium,Houston
+22,Group Stage,L,england,croatia,2026-06-17,Dallas Stadium,Dallas
+23,Group Stage,L,ghana,panama,2026-06-18,Toronto Stadium,Toronto
+24,Group Stage,K,uzbekistan,colombia,2026-06-18,Mexico City Stadium,Mexico City
+25,Group Stage,A,czechia,south africa,2026-06-18,Atlanta Stadium,Atlanta
+26,Group Stage,B,switzerland,bosnia-herzegovina,2026-06-18,Los Angeles Stadium,Los Angeles
+27,Group Stage,B,canada,qatar,2026-06-18,BC Place Vancouver,Vancouver
+28,Group Stage,A,mexico,korea republic,2026-06-19,Guadalajara Stadium,Guadalajara
+29,Group Stage,D,usa,australia,2026-06-19,Seattle Stadium,Seattle
+30,Group Stage,C,scotland,morocco,2026-06-19,Boston Stadium,Boston
+31,Group Stage,C,brazil,haiti,2026-06-20,Philadelphia Stadium,Philadelphia
+32,Group Stage,D,turkiye,paraguay,2026-06-20,San Francisco Bay Area Stadium,San Francisco
+33,Group Stage,F,netherlands,sweden,2026-06-20,Houston Stadium,Houston
+34,Group Stage,E,germany,cote d'ivoire,2026-06-20,Toronto Stadium,Toronto
+35,Group Stage,E,ecuador,curacao,2026-06-21,Kansas City Stadium,Kansas City
+36,Group Stage,F,tunisia,japan,2026-06-21,Monterrey Stadium,Monterrey
+37,Group Stage,H,spain,saudi arabia,2026-06-21,Atlanta Stadium,Atlanta
+38,Group Stage,G,belgium,ir iran,2026-06-21,Los Angeles Stadium,Los Angeles
+39,Group Stage,H,uruguay,cabo verde,2026-06-21,Miami Stadium,Miami
+40,Group Stage,G,new zealand,egypt,2026-06-22,BC Place Vancouver,Vancouver
+41,Group Stage,J,argentina,austria,2026-06-22,Dallas Stadium,Dallas
+42,Group Stage,I,france,iraq,2026-06-22,Philadelphia Stadium,Philadelphia
+43,Group Stage,I,norway,senegal,2026-06-23,New York/New Jersey Stadium,New York
+44,Group Stage,J,jordan,algeria,2026-06-23,San Francisco Bay Area Stadium,San Francisco
+45,Group Stage,K,portugal,uzbekistan,2026-06-23,Houston Stadium,Houston
+46,Group Stage,L,england,ghana,2026-06-23,Boston Stadium,Boston
+47,Group Stage,L,panama,croatia,2026-06-24,Toronto Stadium,Toronto
+48,Group Stage,K,colombia,congo dr,2026-06-24,Guadalajara Stadium,Guadalajara
+49,Group Stage,B,switzerland,canada,2026-06-24,BC Place Vancouver,Vancouver
+50,Group Stage,B,bosnia-herzegovina,qatar,2026-06-24,Seattle Stadium,Seattle
+51,Group Stage,C,scotland,brazil,2026-06-24,Miami Stadium,Miami
+52,Group Stage,C,morocco,haiti,2026-06-24,Atlanta Stadium,Atlanta
+53,Group Stage,A,czechia,mexico,2026-06-25,Mexico City Stadium,Mexico City
+54,Group Stage,A,south africa,korea republic,2026-06-25,Monterrey Stadium,Monterrey
+55,Group Stage,E,curacao,cote d'ivoire,2026-06-25,Philadelphia Stadium,Philadelphia
+56,Group Stage,E,ecuador,germany,2026-06-25,New York/New Jersey Stadium,New York
+57,Group Stage,F,japan,sweden,2026-06-26,Dallas Stadium,Dallas
+58,Group Stage,F,tunisia,netherlands,2026-06-26,Kansas City Stadium,Kansas City
+59,Group Stage,D,turkiye,usa,2026-06-26,Los Angeles Stadium,Los Angeles
+60,Group Stage,D,paraguay,australia,2026-06-26,San Francisco Bay Area Stadium,San Francisco
+61,Group Stage,I,norway,france,2026-06-26,Boston Stadium,Boston
+62,Group Stage,I,senegal,iraq,2026-06-26,Toronto Stadium,Toronto
+63,Group Stage,H,cabo verde,saudi arabia,2026-06-27,Houston Stadium,Houston
+64,Group Stage,H,uruguay,spain,2026-06-27,Guadalajara Stadium,Guadalajara
+65,Group Stage,G,egypt,ir iran,2026-06-27,Seattle Stadium,Seattle
+66,Group Stage,G,new zealand,belgium,2026-06-27,BC Place Vancouver,Vancouver
+67,Group Stage,L,panama,england,2026-06-27,New York/New Jersey Stadium,New York
+68,Group Stage,L,croatia,ghana,2026-06-27,Philadelphia Stadium,Philadelphia
+69,Group Stage,K,colombia,portugal,2026-06-28,Miami Stadium,Miami
+70,Group Stage,K,congo dr,uzbekistan,2026-06-28,Atlanta Stadium,Atlanta
+71,Group Stage,J,algeria,austria,2026-06-28,Kansas City Stadium,Kansas City
+72,Group Stage,J,jordan,argentina,2026-06-28,Dallas Stadium,Dallas

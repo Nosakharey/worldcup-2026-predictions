@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw_data
+    database: worldcup-2026-predictions
+    schema: raw_data
+    tables:
+      - name: results
+      - name: goalscorers
+      - name: players_24
+      - name: teams_24
+      - name: shootouts
+      - name: fifa_world_cup_summary
+      - name: current_player_stats
