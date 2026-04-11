@@ -213,3 +213,9 @@ dbt_packages/
 logs/
 # end dbt Cloud content
 dbt_internal_packages/
+gcp-key.json
+gcp-key-fixed.json
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+exec -l /

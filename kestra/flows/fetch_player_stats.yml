@@ -1,0 +1,239 @@
+id: fetch_player_stats
+namespace: worldcup2026
+
+tasks:
+  # ============ TOP SCORERS ============
+  - id: fetch_pl_scorers
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topscorers?league=39&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_laliga_scorers
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topscorers?league=140&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_bundesliga_scorers
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topscorers?league=78&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_seriea_scorers
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topscorers?league=135&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_ligue1_scorers
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topscorers?league=61&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_ucl_scorers
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topscorers?league=2&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  # ============ TOP ASSISTS ============
+  - id: fetch_pl_assists
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topassists?league=39&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_laliga_assists
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topassists?league=140&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_bundesliga_assists
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topassists?league=78&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_seriea_assists
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topassists?league=135&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_ligue1_assists
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topassists?league=61&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  - id: fetch_ucl_assists
+    type: io.kestra.plugin.core.http.Request
+    uri: https://v3.football.api-sports.io/players/topassists?league=2&season=2024
+    method: GET
+    headers:
+      x-apisports-key: "{{ kv('api_football_key') }}"
+
+  # ============ PROCESS ALL DATA ============
+  - id: process_data
+    type: io.kestra.plugin.scripts.python.Script
+    containerImage: python:3.11
+    inputFiles:
+      pl_scorers.json: "{{ outputs.fetch_pl_scorers.body }}"
+      laliga_scorers.json: "{{ outputs.fetch_laliga_scorers.body }}"
+      bundesliga_scorers.json: "{{ outputs.fetch_bundesliga_scorers.body }}"
+      seriea_scorers.json: "{{ outputs.fetch_seriea_scorers.body }}"
+      ligue1_scorers.json: "{{ outputs.fetch_ligue1_scorers.body }}"
+      ucl_scorers.json: "{{ outputs.fetch_ucl_scorers.body }}"
+      pl_assists.json: "{{ outputs.fetch_pl_assists.body }}"
+      laliga_assists.json: "{{ outputs.fetch_laliga_assists.body }}"
+      bundesliga_assists.json: "{{ outputs.fetch_bundesliga_assists.body }}"
+      seriea_assists.json: "{{ outputs.fetch_seriea_assists.body }}"
+      ligue1_assists.json: "{{ outputs.fetch_ligue1_assists.body }}"
+      ucl_assists.json: "{{ outputs.fetch_ucl_assists.body }}"
+    script: |
+      import json
+      import csv
+
+      scorer_files = {
+          'premier_league': 'pl_scorers.json',
+          'la_liga': 'laliga_scorers.json',
+          'bundesliga': 'bundesliga_scorers.json',
+          'serie_a': 'seriea_scorers.json',
+          'ligue_1': 'ligue1_scorers.json',
+          'champions_league': 'ucl_scorers.json',
+      }
+
+      assist_files = {
+          'premier_league': 'pl_assists.json',
+          'la_liga': 'laliga_assists.json',
+          'bundesliga': 'bundesliga_assists.json',
+          'serie_a': 'seriea_assists.json',
+          'ligue_1': 'ligue1_assists.json',
+          'champions_league': 'ucl_assists.json',
+      }
+
+      def parse_players(files, stat_type):
+          players = []
+          seen = set()
+          for league_name, filename in files.items():
+              with open(filename) as f:
+                  data = json.load(f)
+              for item in data.get('response', []):
+                  player = item['player']
+                  stats = item['statistics'][0]
+                  key = (player['id'], league_name)
+                  if key in seen:
+                      continue
+                  seen.add(key)
+                  players.append({
+                      'player_id': player['id'],
+                      'player_name': player['name'],
+                      'firstname': player['firstname'],
+                      'lastname': player['lastname'],
+                      'nationality': player['nationality'],
+                      'age': player['age'],
+                      'birth_date': player['birth']['date'],
+                      'league': league_name,
+                      'club': stats['team']['name'],
+                      'season': 2024,
+                      'stat_type': stat_type,
+                      'appearances': stats['games']['appearences'],
+                      'minutes': stats['games']['minutes'],
+                      'position': stats['games']['position'],
+                      'rating': stats['games']['rating'],
+                      'goals': stats['goals']['total'],
+                      'assists': stats['goals']['assists'],
+                      'shots_total': stats['shots']['total'],
+                      'shots_on': stats['shots']['on'],
+                      'penalty_goals': stats['penalty']['scored'],
+                      'key_passes': stats['passes']['key'],
+                      'yellow_cards': stats['cards']['yellow'],
+                      'red_cards': stats['cards']['red'],
+                      'dribbles_success': stats['dribbles']['success'],
+                  })
+          return players
+
+      scorers = parse_players(scorer_files, 'scorer')
+      assisters = parse_players(assist_files, 'assister')
+      all_players = scorers + assisters
+
+      seen_keys = {}
+      for p in all_players:
+          key = (p['player_id'], p['league'])
+          if key not in seen_keys:
+              seen_keys[key] = p
+          else:
+              if (p['goals'] or 0) > (seen_keys[key]['goals'] or 0):
+                  seen_keys[key] = p
+
+      final_players = list(seen_keys.values())
+
+      with open('current_player_stats.csv', 'w', newline='', encoding='utf-8') as f:
+          writer = csv.DictWriter(f, fieldnames=final_players[0].keys())
+          writer.writeheader()
+          writer.writerows(final_players)
+
+      print(f"Processed {len(final_players)} unique player-league combinations!")
+    outputFiles:
+      - current_player_stats.csv
+
+  # ============ UPLOAD TO GCS ============
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    serviceAccount: "{{ kv('gcp_creds') }}"
+    from: "{{ outputs.process_data.outputFiles['current_player_stats.csv'] }}"
+    to: gs://worldcup-2026-predictions-data-lake/raw/current_player_stats.csv
+
+  # ============ LOAD TO BIGQUERY ============
+  - id: load_to_bigquery
+    type: io.kestra.plugin.gcp.bigquery.Query
+    projectId: worldcup-2026-predictions
+    serviceAccount: "{{ kv('gcp_creds') }}"
+    sql: |
+      LOAD DATA OVERWRITE `worldcup-2026-predictions.raw_data.current_player_stats`
+      (
+        player_id INT64,
+        player_name STRING,
+        firstname STRING,
+        lastname STRING,
+        nationality STRING,
+        age INT64,
+        birth_date STRING,
+        league STRING,
+        club STRING,
+        season INT64,
+        stat_type STRING,
+        appearances INT64,
+        minutes INT64,
+        position STRING,
+        rating FLOAT64,
+        goals INT64,
+        assists INT64,
+        shots_total INT64,
+        shots_on INT64,
+        penalty_goals INT64,
+        key_passes INT64,
+        yellow_cards INT64,
+        red_cards INT64,
+        dribbles_success INT64
+      )
+      FROM FILES (
+        format = 'CSV',
+        uris = ['gs://worldcup-2026-predictions-data-lake/raw/current_player_stats.csv'],
+        skip_leading_rows = 1
+      )

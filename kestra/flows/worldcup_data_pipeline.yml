@@ -1,0 +1,80 @@
+id: worldcup_data_pipeline
+namespace: worldcup2026
+description: Extract Kaggle datasets and load to BigQuery
+
+variables:
+  gcp_project_id: worldcup-2026-predictions
+  bucket_name: worldcup-2026-predictions-data-lake
+
+tasks:
+  - id: load_results
+    type: io.kestra.plugin.gcp.bigquery.Query
+    serviceAccount: "{{ kv('gcp_creds') }}"
+    projectId: "{{ vars.gcp_project_id }}"
+    sql: |
+      LOAD DATA OVERWRITE `{{ vars.gcp_project_id }}.raw_data.results`
+      FROM FILES (
+        format = 'CSV',
+        uris = ['gs://{{ vars.bucket_name }}/raw/results.csv'],
+        skip_leading_rows = 1
+      );
+
+  - id: load_goalscorers
+    type: io.kestra.plugin.gcp.bigquery.Query
+    serviceAccount: "{{ kv('gcp_creds') }}"
+    projectId: "{{ vars.gcp_project_id }}"
+    sql: |
+      LOAD DATA OVERWRITE `{{ vars.gcp_project_id }}.raw_data.goalscorers`
+      FROM FILES (
+        format = 'CSV',
+        uris = ['gs://{{ vars.bucket_name }}/raw/goalscorers.csv'],
+        skip_leading_rows = 1
+      );
+
+  - id: load_shootouts
+    type: io.kestra.plugin.gcp.bigquery.Query
+    serviceAccount: "{{ kv('gcp_creds') }}"
+    projectId: "{{ vars.gcp_project_id }}"
+    sql: |
+      LOAD DATA OVERWRITE `{{ vars.gcp_project_id }}.raw_data.shootouts`
+      FROM FILES (
+        format = 'CSV',
+        uris = ['gs://{{ vars.bucket_name }}/raw/shootouts.csv'],
+        skip_leading_rows = 1
+      );
+
+  - id: load_players_24
+    type: io.kestra.plugin.gcp.bigquery.Query
+    serviceAccount: "{{ kv('gcp_creds') }}"
+    projectId: "{{ vars.gcp_project_id }}"
+    sql: |
+      LOAD DATA OVERWRITE `{{ vars.gcp_project_id }}.raw_data.players_24`
+      FROM FILES (
+        format = 'CSV',
+        uris = ['gs://{{ vars.bucket_name }}/raw/male_players.csv'],
+        skip_leading_rows = 1
+      );
+
+  - id: load_teams_24
+    type: io.kestra.plugin.gcp.bigquery.Query
+    serviceAccount: "{{ kv('gcp_creds') }}"
+    projectId: "{{ vars.gcp_project_id }}"
+    sql: |
+      LOAD DATA OVERWRITE `{{ vars.gcp_project_id }}.raw_data.teams_24`
+      FROM FILES (
+        format = 'CSV',
+        uris = ['gs://{{ vars.bucket_name }}/raw/male_teams.csv'],
+        skip_leading_rows = 1
+      );
+
+  - id: load_fifa_summary
+    type: io.kestra.plugin.gcp.bigquery.Query
+    serviceAccount: "{{ kv('gcp_creds') }}"
+    projectId: "{{ vars.gcp_project_id }}"
+    sql: |
+      LOAD DATA OVERWRITE `{{ vars.gcp_project_id }}.raw_data.fifa_world_cup_summary`
+      FROM FILES (
+        format = 'CSV',
+        uris = ['gs://{{ vars.bucket_name }}/raw/FIFA - World Cup Summary.csv'],
+        skip_leading_rows = 1
+      );

@@ -1,168 +1,217 @@
-# worldcup-2026-predictions
----
+# ⚽ World Cup 2026 Predictions
 
-## 📊 Dataset Summary
-
-| Source | Table | Rows | Description |
-|--------|-------|------|-------------|
-| Kaggle | results | 49,215 | International matches 1872-2024 |
-| Kaggle | goalscorers | 47,601 | Goals scored per match |
-| Kaggle | players_24 | 180,021 | FIFA 24 player ratings |
-| Kaggle | teams_24 | 6,947 | FIFA 24 team ratings |
-| Kaggle | shootouts | 675 | Penalty shootout results |
-| Kaggle | fifa_world_cup_summary | 22 | WC tournament history |
-| API-Football | current_player_stats | 171 | 2024/25 season stats |
-| Seed | world_cup_2026_groups | 48 | WC 2026 group assignments |
-| Seed | world_cup_2026_fixtures | 72 | WC 2026 group stage matches |
+🔗 **Live Dashboard**: [World Cup 2026 Predictions](https://lookerstudio.google.com/reporting/27e8c29a-42af-4216-8d97-0dd16c9ed809)
 
 ---
 
-## 🔮 Prediction Results
+## Problem Description
 
-### 🏆 Tournament Winner
-| Rank | Team | Finals Probability |
-|------|------|--------------------|
-| 1 | 🇫🇷 France | 65.1% |
-| 2 | 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 63.9% |
-| 3 | 🇩🇪 Germany | 62.7% |
-| 4 | 🇪🇸 Spain | 64.4% |
-| 5 | 🇧🇷 Brazil | 63.1% |
-| 6 | 🇦🇷 Argentina | 62.4% |
+Football is the world's most popular sport, yet most tournament predictions rely on gut feeling, media hype and fan bias rather than data. This project challenges that by building an end-to-end predictive modelling pipeline that uses real historical data and machine learning to forecast what will actually happen at the FIFA World Cup 2026.
 
-### ⚽ Golden Boot
-| Rank | Player | Country | Predicted Goals |
-|------|--------|---------|----------------|
-| 1 | C. Ronaldo | Portugal | 51.99 |
-| 2 | H. Kane | England | 35.95 |
-| 3 | L. Messi | Argentina | 31.73 |
-| 4 | R. Lukaku | Belgium | 26.55 |
-| 5 | K. Mbappé | France | 22.20 |
+The FIFA World Cup 2026 is the biggest in history — 48 teams, 12 groups, 104 matches across USA, Canada and Mexico. With so many teams and matches, the complexity of predicting outcomes is enormous. This project solves that by:
 
-### ⭐ Golden Ball
-| Rank | Player | Country | Impact Score |
-|------|--------|---------|-------------|
-| 1 | C. Ronaldo | Portugal | 52.42 |
-| 2 | H. Kane | England | 30.88 |
-| 3 | L. Messi | Argentina | 30.12 |
+- Collecting 100+ years of international football history (1872–2024)
+- Fetching current 2024/25 player statistics from 6 top European leagues
+- Using FIFA 24 ratings as a proxy for squad quality
+- Training 7 BigQuery ML models to generate data-driven predictions
 
-### 🎯 Top Assists
-| Rank | Player | Country | Combined Score |
-|------|--------|---------|---------------|
-| 1 | L. Messi | Argentina | 27.7 |
-| 2 | M. Olise | France | 26.68 |
-| 3 | J. Kimmich | Germany | 25.24 |
-| 4 | H. Kane | England | 24.73 |
-| 5 | Mohamed Salah | Egypt | 24.26 |
+**Business questions answered:**
 
-### 🌟 Best Young Player (Age ≤ 23)
-| Rank | Player | Country | Age |
-|------|--------|---------|-----|
-| 1 | Lamine Yamal | Spain | 18 |
-| 2 | F. Wirtz | Germany | 22 |
-| 3 | J. Bellingham | England | 22 |
-
-### 🐣 Biggest Underdog Threats
-| Rank | Team | Max Upset % | Deep Run Score |
-|------|------|-------------|----------------|
-| 1 | New Zealand | 96.0% | 65.5 |
-| 2 | Egypt | 87.6% | 62.0 |
-| 3 | Saudi Arabia | 92.4% | 60.6 |
+- 🏆 Which team will win the tournament?
+- ⚽ Who will win the Golden Boot (top scorer)?
+- ⭐ Who will win the Golden Ball (best player)?
+- 🌟 Who will win Best Young Player (age 23 and under)?
+- 🎯 Who will provide the most assists?
+- 🐣 Which underdog teams could cause the biggest upsets?
+- 📊 How will all 72 group stage matches end?
 
 ---
 
-## 🧪 Data Quality
+## Architecture
 
-- ✅ Unique surrogate keys on all dimension and fact tables
-- ✅ Not null checks on all critical columns
-- ✅ No duplicate players in dim_players (custom test)
-- ✅ Accepted values for match_result
-- ✅ Age validation on historical goal matching (15+ years old)
-- ✅ Deduplication of multi-league players using GROUP BY + MAX()
-
----
-
-## 🔑 Key Technical Challenges Solved
-
-**1. Player Name Matching**
-- "h. kane" ≠ "Harry Kane" ≠ "harry edward kane"
-- Built 5-method cascade name matching system
-
-**2. Duplicate Players**
-- Same player in multiple leagues
-- Fixed with GROUP BY + MAX() deduplication
-
-**3. Missing Star Players**
-- Messi (MLS) and Ronaldo (Saudi League) outside our API leagues
-- Added via missing_players.csv seed
-
-**4. Inconsistent Team Names**
-- "IR Iran" vs "Iran" vs "Islamic Republic of Iran"
-- Built standardize_team_name() macro with 15+ mappings
-
-**5. Duplicate Match Records**
-- Tahiti vs New Caledonia played twice same day (1974)
-- Added home_score + away_score to surrogate key
+![Architecture](architecture.png)
+Kaggle Datasets + API-Football + Manual Seeds
+↓
+Kestra (Docker)              ← Orchestration
+↓
+Google Cloud Storage             ← Data Lake (Bronze layer)
+↓
+BigQuery raw_data               ← Raw Layer
+↓
+dbt Cloud                  ← Transformations
+↓
+BigQuery dbt_nagbonze            ← Analytics Layer
+↓
+BigQuery ML                  ← 7 Prediction Models
+↓
+BigQuery predictions             ← Prediction Results
+↓
+Looker Studio                 ← Dashboard
+Terraform provisions all GCP infrastructure ← IaC
 
 ---
 
-## 🚀 How to Reproduce
+## Tech Stack
+
+| Layer | Tool |
+|-------|------|
+| Cloud | Google Cloud Platform |
+| IaC | Terraform |
+| Orchestration | Kestra + Docker |
+| Data Lake | Google Cloud Storage |
+| Data Warehouse | BigQuery |
+| Transformations | dbt Cloud |
+| ML Models | BigQuery ML (7 models) |
+| Dashboard | Looker Studio |
+| Language | Python 3.11 |
+
+---
+
+## Project Structure
+worldcup-2026-predictions/
+├── terraform/                    ← Infrastructure as Code
+│   ├── main.tf                   ← GCS bucket + BigQuery datasets
+│   ├── variables.tf
+│   ├── outputs.tf
+│   └── terraform.tfvars
+│
+├── kestra/                       ← Workflow Orchestration
+│   ├── docker-compose.yml        ← Runs Kestra + Postgres
+│   └── flows/
+│       ├── worldcup_data_pipeline.yml  ← Loads Kaggle CSVs to BigQuery
+│       └── fetch_player_stats.yml      ← Fetches API-Football data
+│
+├── models/                       ← dbt Transformations
+│   ├── staging/                  ← 7 views (clean raw data)
+│   ├── dimensions/               ← dim_teams, dim_players
+│   ├── facts/                    ← fct_matches, fct_goals
+│   └── marts/                    ← mart_team_strength, mart_squad_strength
+│
+├── seeds/                        ← Static reference data (CSVs)
+│   ├── world_cup_2026_groups.csv
+│   ├── world_cup_2026_fixtures.csv
+│   ├── missing_players.csv
+│   └── player_name_mapping.csv
+│
+├── macros/                       ← Reusable SQL macros
+│   └── standardize_team_name.sql
+│
+├── tests/                        ← Custom data quality tests
+│   └── test_no_duplicates_dim_players.sql
+│
+├── ml_models/                    ← BigQuery ML SQL Scripts
+│   ├── train_match_winner.sql
+│   ├── train_golden_boot.sql
+│   ├── train_golden_ball.sql
+│   ├── train_young_player.sql
+│   ├── train_top_assists.sql
+│   ├── train_tournament_winner.sql
+│   ├── train_underdog.sql
+│   └── predictions/
+│       ├── group_stage_predictions.sql
+│       ├── golden_boot_predictions.sql
+│       ├── golden_ball_predictions.sql
+│       ├── top_assists_predictions.sql
+│       ├── young_player_predictions.sql
+│       ├── tournament_winner_predictions.sql
+│       └── underdog_predictions.sql
+│
+├── .env.example                  ← Environment variables template
+├── .gitignore
+├── dbt_project.yml
+└── packages.yml
+
+---
+
+## How to Run
 
 ### Prerequisites
 - Google Cloud Platform account
-- dbt Cloud account (free tier)
 - Docker Desktop installed
-- Kaggle account + API key
-- API-Football account (free tier)
+- dbt Cloud account (free tier)
+- Kaggle API key
+- API-Football key (free tier)
 
-### 1. Clone the Repository
+### 1. Clone the repository
 ```bash
 git clone https://github.com/Nosakharey/worldcup-2026-predictions.git
 cd worldcup-2026-predictions
 ```
 
-### 2. Provision Infrastructure with Terraform
+### 2. Configure environment variables
 ```bash
-cd terraform
-terraform init
-terraform plan
-terraform apply
+cp .env.example .env
+# Edit .env with your actual credentials
 ```
 
-### 3. Start Kestra
+### 3. Provision infrastructure
+```bash
+cd terraform
+terraform init && terraform apply
+```
+
+### 4. Start Kestra
 ```bash
 cd kestra
 docker-compose up -d
+# Open http://localhost:8080
+# Add KV secrets: gcp_creds and api_football_key
+# Run worldcup_data_pipeline flow
+# Run fetch_player_stats flow
 ```
-- Access Kestra UI at http://localhost:8080
-- Add KV store secrets: `gcp_creds`, `api_football_key`
-- Run flow: `worldcup2026.worldcup_data_pipeline`
-- Run flow: `worldcup2026.fetch_player_stats`
 
-### 4. Run dbt
+### 5. Run dbt transformations
 ```bash
-dbt deps
-dbt seed
-dbt run
-dbt test
+dbt deps && dbt seed && dbt run && dbt test
 ```
 
-### 5. Train ML Models & Generate Predictions
-Run the SQL scripts in BigQuery in this order:
-1. Train all 7 ML models (CREATE MODEL statements)
-2. Run all 7 prediction queries (ML.PREDICT statements)
+### 6. Train ML models and generate predictions
+```bash
+# Open BigQuery console
+# Run scripts in ml_models/ in this order:
+# 1. All train_*.sql scripts (CREATE MODEL)
+# 2. All predictions/*.sql scripts (ML.PREDICT)
+```
 
-### 6. View Dashboard
+---
+
+## Dashboard
+
 🔗 [World Cup 2026 Predictions Dashboard](https://lookerstudio.google.com/reporting/27e8c29a-42af-4216-8d97-0dd16c9ed809)
 
+The dashboard is built on Looker Studio connected directly to BigQuery and contains 2 pages with 10 interactive tiles.
+
+**Page 1 — Tournament and Scoring Predictions**
+
+| Tile | Chart | Insight |
+|------|-------|---------|
+| KPI Scorecards | 4 summary cards | Top goals (51.99), Win probability (65.1%), Players tracked (116), Teams (48) |
+| Tournament Winner | Bar chart | France leads at 65.1% followed by Spain (64.4%) and England (63.9%) |
+| Golden Boot | Bar chart | Ronaldo predicted to score 51.99 goals, Kane 2nd with 35.95 |
+
+**Page 2 — Player Awards and Upset Predictions**
+
+| Tile | Chart | Insight |
+|------|-------|---------|
+| Golden Ball | Table | Ronaldo #1 with 52.42 tournament impact score |
+| Top Assists | Bar chart | Messi leads with 27.7 combined assist score |
+| Best Young Player | Chart | Lamine Yamal (age 18, Spain) predicted to win |
+| Underdog Threats | Chart | New Zealand has 96% chance of upsetting Belgium |
+
 ---
 
-## 👤 Author
+## Key Findings
+
+- **France** is the model's strongest tournament winner candidate at 65.1% finals probability
+- **C. Ronaldo** dominates both Golden Boot and Golden Ball predictions despite playing in Saudi Arabia
+- **Lamine Yamal** at just 18 years old is the standout young player prediction
+- **New Zealand vs Belgium** is the most likely upset of the entire tournament at 96% probability
+- **Belgium** is the most vulnerable top team — appears in 3 high upset probability matches
+
+---
+
+## Author
 
 **Agbonze Nosa Godwin**
-- GitHub: [@Nosakharey](https://github.com/Nosakharey)
-- Course: Data Engineering Zoomcamp 2026
-
----
-
-## 📄 License
-MIT License
+Data Engineering Zoomcamp 2026
+GitHub: [@Nosakharey](https://github.com/Nosakharey)
