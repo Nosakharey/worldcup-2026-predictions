@@ -30,74 +30,53 @@ The FIFA World Cup 2026 is the biggest in history — 48 teams, 12 groups, 104 m
 ## Architecture
 
 ![Architecture](architecture.png)
+```
 Kaggle Datasets + API-Football + Manual Seeds
-↓
-Kestra (Docker)              ← Orchestration
-↓
-Google Cloud Storage             ← Data Lake (Bronze layer)
-↓
-BigQuery raw_data               ← Raw Layer
-↓
-dbt Cloud                  ← Transformations
-↓
-BigQuery dbt_nagbonze            ← Analytics Layer
-↓
-BigQuery ML                  ← 7 Prediction Models
-↓
-BigQuery predictions             ← Prediction Results
-↓
-Looker Studio                 ← Dashboard
+                  ↓
+          Kestra (Docker)              ← Orchestration
+                  ↓
+      Google Cloud Storage             ← Data Lake (Bronze layer)
+                  ↓
+       BigQuery raw_data               ← Raw Layer
+                  ↓
+            dbt Cloud                  ← Transformations
+                  ↓
+      BigQuery dbt_nagbonze            ← Analytics Layer
+                  ↓
+          BigQuery ML                  ← 7 Prediction Models
+                  ↓
+      BigQuery predictions             ← Prediction Results
+                  ↓
+         Looker Studio                 ← Dashboard
+
 Terraform provisions all GCP infrastructure ← IaC
+```
 
----
-
-## Tech Stack
-
-| Layer | Tool |
-|-------|------|
-| Cloud | Google Cloud Platform |
-| IaC | Terraform |
-| Orchestration | Kestra + Docker |
-| Data Lake | Google Cloud Storage |
-| Data Warehouse | BigQuery |
-| Transformations | dbt Cloud |
-| ML Models | BigQuery ML (7 models) |
-| Dashboard | Looker Studio |
-| Language | Python 3.11 |
-
----
 
 ## Project Structure
+```
 worldcup-2026-predictions/
 ├── terraform/                    ← Infrastructure as Code
-│   ├── main.tf                   ← GCS bucket + BigQuery datasets
+│   ├── main.tf
 │   ├── variables.tf
 │   ├── outputs.tf
 │   └── terraform.tfvars
 │
 ├── kestra/                       ← Workflow Orchestration
-│   ├── docker-compose.yml        ← Runs Kestra + Postgres
+│   ├── docker-compose.yml
 │   └── flows/
-│       ├── worldcup_data_pipeline.yml  ← Loads Kaggle CSVs to BigQuery
-│       └── fetch_player_stats.yml      ← Fetches API-Football data
+│       ├── worldcup_data_pipeline.yml
+│       └── fetch_player_stats.yml
 │
 ├── models/                       ← dbt Transformations
-│   ├── staging/                  ← 7 views (clean raw data)
-│   ├── dimensions/               ← dim_teams, dim_players
-│   ├── facts/                    ← fct_matches, fct_goals
-│   └── marts/                    ← mart_team_strength, mart_squad_strength
+│   ├── staging/
+│   ├── dimensions/
+│   ├── facts/
+│   └── marts/
 │
-├── seeds/                        ← Static reference data (CSVs)
-│   ├── world_cup_2026_groups.csv
-│   ├── world_cup_2026_fixtures.csv
-│   ├── missing_players.csv
-│   └── player_name_mapping.csv
-│
-├── macros/                       ← Reusable SQL macros
-│   └── standardize_team_name.sql
-│
-├── tests/                        ← Custom data quality tests
-│   └── test_no_duplicates_dim_players.sql
+├── seeds/
+├── macros/
+├── tests/
 │
 ├── ml_models/                    ← BigQuery ML SQL Scripts
 │   ├── train_match_winner.sql
@@ -116,10 +95,11 @@ worldcup-2026-predictions/
 │       ├── tournament_winner_predictions.sql
 │       └── underdog_predictions.sql
 │
-├── .env.example                  ← Environment variables template
+├── .env.example
 ├── .gitignore
 ├── dbt_project.yml
 └── packages.yml
+```
 
 ---
 
