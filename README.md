@@ -29,7 +29,7 @@ The FIFA World Cup 2026 is the biggest in history — 48 teams, 12 groups, 104 m
 
 ## Architecture
 
-![Architecture](architecture.png)
+![Architecture](docs/architecture.png)
 ```
 Kaggle Datasets + API-Football + Manual Seeds
                   ↓
