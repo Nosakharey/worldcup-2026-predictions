@@ -6,7 +6,7 @@
 
 ## Problem Description
 
-Football is the world's most popular sport, yet most tournament predictions rely on gut feeling, media hype and fan bias rather than data. This project challenges that by building an end-to-end predictive modelling pipeline that uses real historical data and machine learning to forecast what will actually happen at the FIFA World Cup 2026.
+Football is the world's most popular sport, yet most tournament predictions rely on gut feeling, media hype and fan bias rather than data. This project challenges that by building an end-to-end predictive modelling pipeline that uses real historical data and BigQuery ML to forecast what will actually happen at the FIFA World Cup 2026.
 
 The FIFA World Cup 2026 is the biggest in history — 48 teams, 12 groups, 104 matches across USA, Canada and Mexico. With so many teams and matches, the complexity of predicting outcomes is enormous. This project solves that by:
 
