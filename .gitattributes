@@ -1,0 +1,4 @@
+*.sql linguist-language=SQL
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
+*.tf linguist-detectable=false
