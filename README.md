@@ -156,6 +156,11 @@ dbt deps && dbt seed && dbt run && dbt test
 ---
 
 ## Dashboard
+**Page 1 — Tournament and Scoring Predictions**
+![Dashboard Page 1](docs/dashboard_page1.png)
+
+**Page 2 — Player Awards and Upset Predictions**
+![Dashboard Page 2](docs/dashboard_page2.png)
 
 🔗 [World Cup 2026 Predictions Dashboard](https://lookerstudio.google.com/reporting/27e8c29a-42af-4216-8d97-0dd16c9ed809)
 
@@ -190,8 +195,4 @@ The dashboard is built on Looker Studio connected directly to BigQuery and conta
 
 ---
 
-## Author
 
-**Agbonze Nosa Godwin**
-Data Engineering Zoomcamp 2026
-GitHub: [@Nosakharey](https://github.com/Nosakharey)
